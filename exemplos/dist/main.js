@@ -7,3 +7,4 @@ const argv = yargs
     .argv;
 const num = argv.num;
 console.log(`-> O fatorial de ${num} é gual a ${fatorial_1.fatorial(num)}`);
+//# sourceMappingURL=main.js.map
