@@ -7,4 +7,4 @@ const argv = yargs
 
 const num = argv.num;
 
-console.log(`O fatorial de ${num} é gual a ${fatorial(num)}`);
+console.log(`-> O fatorial de ${num} é gual a ${fatorial(num)}`);

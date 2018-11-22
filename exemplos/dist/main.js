@@ -6,4 +6,4 @@ const argv = yargs
     .demandOption('num')
     .argv;
 const num = argv.num;
-console.log(`O fatorial de ${num} é gual a ${fatorial_1.fatorial(num)}`);
+console.log(`-> O fatorial de ${num} é gual a ${fatorial_1.fatorial(num)}`);
