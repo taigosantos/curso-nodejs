@@ -1,14 +1,25 @@
 import * as restify from 'restify'
+import * as mongoose from 'mongoose'
+
 import { environment } from '../common/environments';
 import { Router } from '../common/router'
+import { mergePatchBodyParser } from './merge-patch.parser'
 
 export class Server {
 
     application!: restify.Server;
 
     async bootstrap(routers: Router[] = []): Promise<Server> {
+        await this.initializeDb();
         await this.initRoutes(routers);
         return this;
+    }
+
+    initializeDb(): mongoose.MongooseThenable {
+        (<any>mongoose).Promise = global.Promise
+        return mongoose.connect(environment.db.url, {
+            useMongoClient: true
+        })
     }
 
     initRoutes(routers: Router[]): Promise<any> {
@@ -21,6 +32,8 @@ export class Server {
                 })
 
                 this.application.use(restify.plugins.queryParser())
+                this.application.use(restify.plugins.bodyParser())
+                this.application.use(mergePatchBodyParser)
 
                 // routes
 

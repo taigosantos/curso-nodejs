@@ -9,12 +9,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const restify = require("restify");
+const mongoose = require("mongoose");
 const environments_1 = require("../common/environments");
+const merge_patch_parser_1 = require("./merge-patch.parser");
 class Server {
     bootstrap(routers = []) {
         return __awaiter(this, void 0, void 0, function* () {
+            yield this.initializeDb();
             yield this.initRoutes(routers);
             return this;
+        });
+    }
+    initializeDb() {
+        mongoose.Promise = global.Promise;
+        return mongoose.connect(environments_1.environment.db.url, {
+            useMongoClient: true
         });
     }
     initRoutes(routers) {
@@ -25,6 +34,8 @@ class Server {
                     version: '1.0.0'
                 });
                 this.application.use(restify.plugins.queryParser());
+                this.application.use(restify.plugins.bodyParser());
+                this.application.use(merge_patch_parser_1.mergePatchBodyParser);
                 // routes
                 for (const router of routers) {
                     router.applyRouters(this.application);
