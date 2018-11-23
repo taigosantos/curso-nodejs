@@ -7,6 +7,9 @@ var routers = [
     usersRouter
 ]
 
+
+
+
 server.bootstrap(routers)
     .then(server => {
         console.log('Server is listening on: ', server.application.address())

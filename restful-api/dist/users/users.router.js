@@ -20,7 +20,12 @@ class UsersRouter extends router_1.Router {
         }));
         // GET BY ID
         application.get('/users/:id', (req, resp, next) => __awaiter(this, void 0, void 0, function* () {
-            const user = yield users_model_1.User.findById(req.params.id);
+            if (!this.isValidId(req.params.id)) {
+                resp.send(400);
+                return next();
+            }
+            const user = yield users_model_1.User
+                .findById(req.params.id);
             if (!user) {
                 resp.send(404);
                 return next();
@@ -40,6 +45,10 @@ class UsersRouter extends router_1.Router {
         }));
         // PUT
         application.put('/users/:id', (req, resp, next) => __awaiter(this, void 0, void 0, function* () {
+            if (!this.isValidId(req.params.id)) {
+                resp.send(400);
+                return next();
+            }
             const options = {
                 overwrite: true
             };
@@ -51,8 +60,12 @@ class UsersRouter extends router_1.Router {
             resp.send(204);
             return next();
         }));
-        // PUT
+        // PATCH
         application.patch('/users/:id', (req, resp, next) => __awaiter(this, void 0, void 0, function* () {
+            if (!this.isValidId(req.params.id)) {
+                resp.send(400);
+                return next();
+            }
             const options = {
                 new: true
             };
@@ -66,7 +79,15 @@ class UsersRouter extends router_1.Router {
         }));
         // DELETE
         application.del('/users/:id', (req, resp, next) => __awaiter(this, void 0, void 0, function* () {
-            yield users_model_1.User.remove({ _id: req.params.id });
+            if (!this.isValidId(req.params.id)) {
+                resp.send(400);
+                return next();
+            }
+            const user = yield users_model_1.User.findByIdAndRemove({ _id: req.params.id });
+            if (!user) {
+                resp.send(404);
+                return next();
+            }
             resp.send(204);
             return next();
         }));

@@ -21,7 +21,13 @@ class UsersRouter extends Router {
 
         application.get('/users/:id', async (req, resp, next) => {
 
-            const user = await User.findById(req.params.id)
+            if (!this.isValidId(req.params.id)) {
+                resp.send(400)
+                return next()
+            }
+
+            const user = await User
+                .findById(req.params.id)
 
             if (!user) {
                 resp.send(404)
@@ -53,6 +59,11 @@ class UsersRouter extends Router {
 
         application.put('/users/:id', async (req, resp, next) => {
 
+            if (!this.isValidId(req.params.id)) {
+                resp.send(400)
+                return next()
+            }
+
             const options = {
                 overwrite: true
             }
@@ -69,9 +80,14 @@ class UsersRouter extends Router {
 
         })
 
-        // PUT
+        // PATCH
 
         application.patch('/users/:id', async (req, resp, next) => {
+
+            if (!this.isValidId(req.params.id)) {
+                resp.send(400)
+                return next()
+            }
 
             const options = {
                 new: true
@@ -93,7 +109,17 @@ class UsersRouter extends Router {
 
         application.del('/users/:id', async (req, resp, next) => {
 
-            await User.remove({ _id: req.params.id })
+            if (!this.isValidId(req.params.id)) {
+                resp.send(400)
+                return next()
+            }
+            
+            const user = await User.findByIdAndRemove({ _id: req.params.id })
+
+            if (!user) {
+                resp.send(404)
+                return next()
+            }
 
             resp.send(204)
             return next()
