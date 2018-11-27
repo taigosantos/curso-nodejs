@@ -12,6 +12,7 @@ const restify = require("restify");
 const mongoose = require("mongoose");
 const environments_1 = require("../common/environments");
 const merge_patch_parser_1 = require("./merge-patch.parser");
+const error_handler_1 = require("./error.handler");
 class Server {
     bootstrap(routers = []) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -43,6 +44,7 @@ class Server {
                 this.application.listen(environments_1.environment.server.port, () => {
                     resolve(this.application);
                 });
+                this.application.on('restifyError', error_handler_1.handleError);
             }
             catch (error) {
                 reject(error);
