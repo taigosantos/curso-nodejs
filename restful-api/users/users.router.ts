@@ -32,8 +32,7 @@ class UsersRouter extends Router {
                 .then(user => {
 
                     if (!user) {
-                        resp.status(404)
-                        return next()
+                        throw new NotFoundError()
                     }
 
                     resp.json(user)
@@ -83,7 +82,7 @@ class UsersRouter extends Router {
                     if (!result.n) {
                         throw new NotFoundError()
                     }
-
+        
                     resp.send(204)
                     return next()
 
@@ -106,12 +105,12 @@ class UsersRouter extends Router {
             }
 
             User.findByIdAndUpdate({ _id: req.params.id }, req.body, options)
-                .then(user => {
-
+                .then(user =>{
+                    
                     if (!user) {
                         throw new NotFoundError()
                     }
-
+        
                     resp.send(204)
                     return next()
 
@@ -135,7 +134,7 @@ class UsersRouter extends Router {
                     if (!user) {
                         throw new NotFoundError()
                     }
-
+        
                     resp.send(204)
                     return next()
 
